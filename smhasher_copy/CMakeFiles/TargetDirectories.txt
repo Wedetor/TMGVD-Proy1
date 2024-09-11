@@ -1,0 +1,4 @@
+/home/pregrado/joscortes2021/Escritorio/TMGVD-Proy1/smhasher_copy/CMakeFiles/SMHasherSupport.dir
+/home/pregrado/joscortes2021/Escritorio/TMGVD-Proy1/smhasher_copy/CMakeFiles/SMHasher.dir
+/home/pregrado/joscortes2021/Escritorio/TMGVD-Proy1/smhasher_copy/CMakeFiles/edit_cache.dir
+/home/pregrado/joscortes2021/Escritorio/TMGVD-Proy1/smhasher_copy/CMakeFiles/rebuild_cache.dir
