@@ -6,6 +6,8 @@
 #include <vector>
 #include <bitset>
 #include <cmath>
+#include <iterator>
+#include <algorithm>
 
 using namespace std;
 
@@ -27,37 +29,71 @@ int hashString(string h){
 int main () {
 
     map<int, int> sketch;
-    string stream; // Stream won't be saved; this is just for testing purposes.
-    int p; // length of sketchKey bits. 
-    string window;
-    int windowSize;
     int hashValue;
     int sketchKey;
     int sketchValue;
 
-    // TO-DO: Replace cin >> stream with a while loop that reads the stream without saving it
-    cin >> stream;
+    istream_iterator<char> eos; // end-of-stream 
+    bool eosFlag = false;
 
-    p = ceil(log2(stream.size()));
-    windowSize = 3; // Edit for bigger or shorter windows to examine the stream
+    int p = 2; // length of sketchKey bits. 2 by default. Changes throughout the process. 
 
-    
-    for(int i = 0; i < stream.size()-2; i++){
-        window.clear();
+    int sizeOfStream = 0; // Changes throughout the process.
+    bool firstIteration = true;
 
-        // If the stream is too short for our window to analyze, break;
-        if(i + windowSize > stream.size()){
+    string mer;
+    int merSize = 3; // Edit for bigger or shorter mers to examine the stream. 3-mer by default
+                     // If the stream's size isn't divisible by merSize, there will be
+                     // segments which won't be read.
+
+    // -------------------------------------------------------------------------------------- //
+
+    istream_iterator<char> iit{cin};
+
+    while(!eosFlag){
+
+        if(firstIteration){
+            firstIteration = false;
+            p = max((int)ceil(log2(sizeOfStream)), 2);       
+            for(int i = 0; i < merSize; i++){
+                if(iit != eos){
+                    mer.push_back(*iit);
+                    advance(iit, 1);
+                } else {
+                    eosFlag = true;
+                    cout << "eos reached." << '\n';
+                    break;
+                }
+            }
+        } else {
+            p = max((int)ceil(log2(sizeOfStream)), p);
+            mer.erase(mer.begin());
+            if(iit != eos){
+                mer.push_back(*iit);
+                advance(iit, 1);
+            } else {
+                eosFlag = true;
+                cout << "eos reached." << '\n';
+                break;
+            }
+        }
+        
+        if(eosFlag){
             break;
         }
 
-        // Move our window through the stream, saving the char values
-        for(int j = i; j < windowSize + i; j++){
-            window.push_back(stream[j]);
-        }
-        cout << "The window to hash is " << window << '\n';
+        sizeOfStream += merSize;
+        cout << "The mer to hash is " << mer << '\n';
 
-        // Hash the portion of stream saved
-        hashValue = hashString(window);
+        if(firstIteration){
+            p = max((int)ceil(log2(sizeOfStream)), 2);
+            firstIteration = false;
+        } else {
+            p = ceil(log2(sizeOfStream));
+        }
+        
+
+        hashValue = hashString(mer);
         cout << "The hash value is: " << hashValue << '\n';
         cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 
@@ -66,12 +102,12 @@ int main () {
         cout << "sketchKey is " << sketchKey << '\n';
 
         // The remaining bits will be used to value the key
-        sketchValue = (hashValue << p) >> p;
+        sketchValue = clz(hashValue << p);
         cout << "sketchValue is " << sketchValue << '\n';
 
         // If the key doesn't exist, insert.
         /* If the key does exist, then insert only if 
-           the value to insert is greater than the one saved */
+        the value to insert is greater than the one saved */
         if(sketch.count(sketchKey) > 0){
             if(sketch[sketchKey] < sketchValue){
                 sketch[sketchKey] = sketchValue;
@@ -81,10 +117,8 @@ int main () {
         }
 
         cout << '\n';
+
     }
-
-
-
 
     return 0;
 }
