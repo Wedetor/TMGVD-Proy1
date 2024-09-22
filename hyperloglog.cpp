@@ -26,10 +26,7 @@ int main () {
     unsigned int sketchKey;
     unsigned int sketchValue;
 
-    istream_iterator<char> eos; // end-of-stream 
-    bool eosFlag = false;
-
-    int p = 2; // length of sketchKey bits. 2 by default. Changes throughout the process. 
+    int p = 14; // length of sketchKey bits. 14 by project's error requirements.
 
     int sizeOfStream = 0; // Changes throughout the process.
     bool firstIteration = true;
@@ -42,51 +39,36 @@ int main () {
     // -------------------------------------------------------------------------------------- //
 
     istream_iterator<char> iit{cin};
+    istream_iterator<char> eos; // end-of-stream 
+    bool eosFlag = false;
 
     while(!eosFlag){
 
         if(firstIteration){
             firstIteration = false;
-            p = max((int)ceil(log2(sizeOfStream)), 2);       
-            for(int i = 0; i < merSize; i++){
+
+            mer.push_back(*iit);
+            for(int i = 1; i < merSize; i++){
+                advance(iit, 1);
                 if(iit != eos){
                     mer.push_back(*iit);
-                    advance(iit, 1);
                 } else {
-                    eosFlag = true;
-                    cout << "eos reached." << '\n';
                     break;
                 }
             }
+
         } else {
-            p = max((int)ceil(log2(sizeOfStream)), p);
             mer.erase(mer.begin());
+
+            advance(iit, 1);
             if(iit != eos){
-                mer.push_back(*iit);
-                advance(iit, 1);
+                mer.push_back(*iit);            
             } else {
-                eosFlag = true;
-                cout << "eos reached." << '\n';
                 break;
             }
         }
         
-        if(eosFlag){
-            break;
-        }
-
-        if(firstIteration){
-            sizeOfStream += merSize;
-        } else sizeOfStream++;
-        
         cout << "The mer to hash is " << mer << '\n';
-
-        if(firstIteration){
-            p = max((int)ceil(log2(sizeOfStream)), 2);
-            firstIteration = false;
-        } else {
-            p = ceil(log2(sizeOfStream));
-        }
         
         // TO-DO: ASK TEACHER IF rand() IS IN EVERY MER OR ONLY ONCE.
         hashValue = MurmurHash1Aligned(&mer, merSize, rand());
@@ -94,7 +76,7 @@ int main () {
         cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 
         // Our key will be the first p bits + 1
-        sketchKey = (hashValue >> (31 - p)) + 1;
+        sketchKey = (hashValue >> (32 - p)) + 1;
         cout << "sketchKey is " << sketchKey << '\n';
 
         // The remaining bits will be used to value the key
