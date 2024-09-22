@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <string>
@@ -8,6 +9,7 @@
 #include <cmath>
 #include <iterator>
 #include <algorithm>
+#include "smhasher_copy/MurmurHash1.cpp"
 
 using namespace std;
 
@@ -17,21 +19,12 @@ unsigned int clz(unsigned int num){
     return __builtin_clz(num);
 }
 
-// TO-DO: Horrible hash - replace later with smhasher
-int hashString(string h){
-    int hashValue = 0;
-    for(int i = 0; i < h.size(); i++){
-        hashValue += h[i];
-    }
-    return hashValue;
-}
-
 int main () {
 
     map<int, int> sketch;
-    int hashValue;
-    int sketchKey;
-    int sketchValue;
+    unsigned int hashValue;
+    unsigned int sketchKey;
+    unsigned int sketchValue;
 
     istream_iterator<char> eos; // end-of-stream 
     bool eosFlag = false;
@@ -82,7 +75,10 @@ int main () {
             break;
         }
 
-        sizeOfStream += merSize;
+        if(firstIteration){
+            sizeOfStream += merSize;
+        } else sizeOfStream++;
+        
         cout << "The mer to hash is " << mer << '\n';
 
         if(firstIteration){
@@ -92,17 +88,17 @@ int main () {
             p = ceil(log2(sizeOfStream));
         }
         
-
-        hashValue = hashString(mer);
+        // TO-DO: ASK TEACHER IF rand() IS IN EVERY MER OR ONLY ONCE.
+        hashValue = MurmurHash1Aligned(&mer, merSize, rand());
         cout << "The hash value is: " << hashValue << '\n';
         cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 
         // Our key will be the first p bits + 1
-        sketchKey = (hashValue >> (32 - p)) + 1;
+        sketchKey = (hashValue >> (31 - p)) + 1;
         cout << "sketchKey is " << sketchKey << '\n';
 
         // The remaining bits will be used to value the key
-        sketchValue = clz(hashValue << p);
+        sketchValue = clz(hashValue << p) + 1;
         cout << "sketchValue is " << sketchValue << '\n';
 
         // If the key doesn't exist, insert.
