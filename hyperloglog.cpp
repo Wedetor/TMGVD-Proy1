@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iterator>
 #include <algorithm>
+#include <fstream>
 #include "smhasher_copy/sha1.cpp"
 
 using namespace std;
@@ -19,7 +20,7 @@ unsigned int clz(unsigned int num){
     return __builtin_clz(num);
 }
 
-int main () {
+map<int, int> hyperloglog(string fileName) {
 
     map<int, int> sketch;
     unsigned int hashValue;
@@ -39,9 +40,19 @@ int main () {
 
     // -------------------------------------------------------------------------------------- //
 
-    istream_iterator<char> iit{cin};
+    ifstream inputGenomeFile(fileName);
+    if(!inputGenomeFile.is_open()){
+        return sketch;
+    }
+
+    string firstLine;
+    istream_iterator<char> iit(inputGenomeFile);
     istream_iterator<char> eos; // end-of-stream 
-    
+
+    getline(inputGenomeFile, firstLine);
+    cout << firstLine << '\n';
+
+    advance(iit, 1);
 
     while(true){
 
@@ -69,19 +80,19 @@ int main () {
             }
         }
         
-        cout << "The mer to hash is " << mer << '\n';
+        //cout << "The mer to hash is " << mer << '\n';
         
         sha1_32a (&mer, sizeof(mer), randomSeed, &hashValue);
-        cout << "The hash value is: " << hashValue << '\n';
-        cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
+        //cout << "The hash value is: " << hashValue << '\n';
+        //cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 
         // Our key will be the first p bits + 1
         sketchKey = (hashValue >> (32 - p)) + 1;
-        cout << "sketchKey is " << sketchKey << '\n';
+        //cout << "sketchKey is " << sketchKey << '\n';
 
         // The remaining bits will be used to value the key
         sketchValue = clz(hashValue << p) + 1;
-        cout << "sketchValue is " << sketchValue << '\n';
+        //cout << "sketchValue is " << sketchValue << '\n';
 
         // If the key doesn't exist, insert.
         /* If the key does exist, then insert only if 
@@ -94,9 +105,10 @@ int main () {
             sketch[sketchKey] = sketchValue;
         }
 
-        cout << '\n';
+        //cout << '\n';
 
     }
-
-    return 0;
+    cout << "while loop done :)" << '\n';
+    inputGenomeFile.close();
+    return sketch;
 }
