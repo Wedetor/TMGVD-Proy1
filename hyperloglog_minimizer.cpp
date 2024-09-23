@@ -33,7 +33,7 @@ int main () {
         if(first_window_it){
             first_window_it = false;
             window.push_back(*win_it);
-            for(int i=0; i<windowSize;i++){
+            for(int i=0; i<windowSize-1;i++){
                 advance(win_it, 1);
                 if(win_it != end_of_string){
                     window.push_back(*win_it);
@@ -59,32 +59,33 @@ int main () {
         int sizeOfStream = 0; // Changes throughout the process.
         bool first_mer_it = true;
         string mer;
+	int counter2 = 0;
 
         for(int i=0; i < windowSize - merSize + 1; i++){
-            //cout<<"i: "<<i<<endl;
-            int counter = 0;
-            int next_pos;
-            cout << "THIS MESSAGE SHOULD APPEAR ONCE PER [WINDOW]." <<endl;
-            while(counter < windowSize-merSize){
+            int counter1 = 0;
+	    int next_pos;
+            while(counter1 < windowSize-merSize){
                 if(!first_mer_it){
                     mer.push_back(window[next_pos]);
                     mer.erase(mer.begin());
                     next_pos++;
-                    counter++;
+                    counter1++;
                     sizeOfStream++;
-                }else{
+                }
+		if(first_mer_it){
                     first_mer_it = false;
                     for(int j = i; j < merSize; j++){
                         mer.push_back(window[j]);
-                        counter++;
+                        counter1++;
                         sizeOfStream += merSize;
                         next_pos = j+1;
                     }
                 }
-                if(mer.length() < 3){
-                    cout << "APAGALO, OTTO!!!" << endl;
-                    break;
-                }
+		if(counter2 == windowSize-merSize+1){
+			break;
+		}
+		counter2++;
+
                 cout << "The mer to hash is " << mer << '\n';
                 // Hash the current mer
                 hashValue = MurmurHash1Aligned(&mer, merSize, rand());
@@ -110,6 +111,7 @@ int main () {
                 }
                 cout <<"\n";
             }
+
         }
     }
     return 0;
