@@ -9,7 +9,7 @@
 #include <cmath>
 #include <iterator>
 #include <algorithm>
-#include "smhasher_copy/MurmurHash1.cpp"
+#include "smhasher_copy/sha1.cpp"
 
 using namespace std;
 
@@ -25,6 +25,7 @@ int main () {
     unsigned int hashValue;
     unsigned int sketchKey;
     unsigned int sketchValue;
+    unsigned int randomSeed = rand();
 
     int p = 14; // length of sketchKey bits. 14 by project's error requirements.
 
@@ -40,9 +41,9 @@ int main () {
 
     istream_iterator<char> iit{cin};
     istream_iterator<char> eos; // end-of-stream 
-    bool eosFlag = false;
+    
 
-    while(!eosFlag){
+    while(true){
 
         if(firstIteration){
             firstIteration = false;
@@ -70,8 +71,7 @@ int main () {
         
         cout << "The mer to hash is " << mer << '\n';
         
-        // TO-DO: ASK TEACHER IF rand() IS IN EVERY MER OR ONLY ONCE.
-        hashValue = MurmurHash1Aligned(&mer, merSize, rand());
+        sha1_32a (&mer, sizeof(mer), randomSeed, &hashValue);
         cout << "The hash value is: " << hashValue << '\n';
         cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 

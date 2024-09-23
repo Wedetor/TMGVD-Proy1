@@ -248,6 +248,8 @@ void sha1_32a ( const void * key, int len, uint32_t seed, void * out )
   memcpy(out,&digest[0],4);
 }
 
+/*
+
 //-----------------------------------------------------------------------------
 // self test
 
@@ -303,8 +305,9 @@ int main(int argc, char** argv)
             fprintf(stderr,"\t%s is correct\n", test_results[k]);
             return (1);
         }
-    }
+    }*/
     /* million 'a' vector we feed separately */
+/*
     SHA1_Init(&context);
     for (k = 0; k < 1000000; k++)
         SHA1_Update(&context, (uint8_t*)"a", 1);
@@ -317,9 +320,12 @@ int main(int argc, char** argv)
         fprintf(stderr,"\t%s is correct\n", test_results[2]);
         return (1);
     }
-
+*/
     /* success */
+/*
     fprintf(stdout, "ok\n");
     return(0);
 }
 #endif /* TEST */
+
+
