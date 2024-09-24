@@ -6,7 +6,8 @@
 
 int main() {
 
-	hyperloglog("GCF_000331305.1_ASM33130v1_genomic.fna");
+	unsigned int seed = rand();
+	hyperloglog("GCF_000331305.1_ASM33130v1_genomic.fna", seed);
 	
 	return 0;
 }

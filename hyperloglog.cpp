@@ -20,13 +20,13 @@ unsigned int clz(unsigned int num){
     return __builtin_clz(num);
 }
 
-map<int, int> hyperloglog(string fileName) {
+map<int, int> hyperloglog(string fileName, unsigned int randomSeed) {
 
     map<int, int> sketch;
     unsigned int hashValue;
     unsigned int sketchKey;
     unsigned int sketchValue;
-    unsigned int randomSeed = rand();
+    unsigned int seed = randomSeed;
 
     int p = 14; // length of sketchKey bits. 14 by project's error requirements.
 
@@ -79,7 +79,7 @@ map<int, int> hyperloglog(string fileName) {
         
         //cout << "The mer to hash is " << mer << '\n';
         
-        sha1_32a (&mer, sizeof(mer), randomSeed, &hashValue);
+        sha1_32a (&mer, sizeof(mer), seed, &hashValue);
         //cout << "The hash value is: " << hashValue << '\n';
         //cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 
