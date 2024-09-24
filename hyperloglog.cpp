@@ -30,13 +30,10 @@ map<int, int> hyperloglog(string fileName) {
 
     int p = 14; // length of sketchKey bits. 14 by project's error requirements.
 
-    int sizeOfStream = 0; // Changes throughout the process.
     bool firstIteration = true;
 
     string mer;
-    int merSize = 3; // Edit for bigger or shorter mers to examine the stream. 3-mer by default
-                     // If the stream's size isn't divisible by merSize, there will be
-                     // segments which won't be read.
+    int merSize = 3; // Edit for bigger or shorter mers to examine the stream. 3-mer by default.
 
     // -------------------------------------------------------------------------------------- //
 
@@ -108,7 +105,7 @@ map<int, int> hyperloglog(string fileName) {
         //cout << '\n';
 
     }
-    cout << "while loop done :)" << '\n';
+    //cout << "while loop done :)" << '\n';
     inputGenomeFile.close();
     return sketch;
 }
