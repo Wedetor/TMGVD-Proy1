@@ -16,7 +16,7 @@ int main() {
 	int cardAoB = 0;
 	for(auto p: GenA)
 		cardA += p.second;
-	
+
 	for(auto p: GenB)
 		cardB += p.second;
 
@@ -28,15 +28,18 @@ int main() {
 			if(itA->first == itB->first){
 				GenAoB.insert(pair<int, int>(itA->first, itA->second));
 			}
+			advance(itA, 1);
+			advance(itB, 1);
 		}
 	}else{
 		while(itB != GenB.end()){
 			if(itA->first == itB->first){
 				GenAoB.insert(pair<int, int>(itA->first, itA->second));
 			}
+			advance(itA, 1);
+			advance(itB, 1);
 		}
 	}
-
 	for(auto p: GenAoB)
 		cardAoB += p.second;
 
@@ -44,7 +47,7 @@ int main() {
 	cout << "Cardinalidad B: " << cardB << endl;
 	cout << "Cardinalidad AoB: " << cardAoB << endl;
 
-	int Jaccard = (cardA + cardB - cardAoB) / cardAoB; 
+	float Jaccard = (cardA + cardB - cardAoB) / cardAoB; 
 	cout << "Jaccard: " << Jaccard << endl;
 	return 0;
 }
