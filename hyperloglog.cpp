@@ -10,7 +10,7 @@
 #include <iterator>
 #include <algorithm>
 #include <fstream>
-#include "smhasher_copy/sha1.cpp"
+#include "smhasher_copy/MurmurHash3.cpp"
 
 using namespace std;
 
@@ -20,9 +20,9 @@ unsigned int clz(unsigned int num){
     return __builtin_clz(num);
 }
 
-map<int, int> hyperloglog(string fileName, unsigned int randomSeed) {
+map<unsigned int, unsigned int> hyperloglog(string fileName, unsigned int randomSeed) {
 
-    map<int, int> sketch;
+    map<unsigned int, unsigned int> sketch;
     unsigned int hashValue;
     unsigned int sketchKey;
     unsigned int sketchValue;
@@ -33,7 +33,7 @@ map<int, int> hyperloglog(string fileName, unsigned int randomSeed) {
     bool firstIteration = true;
 
     string mer;
-    int merSize = 3; // Edit for bigger or shorter mers to examine the stream. 3-mer by default.
+    int merSize = 20; // Edit for bigger or shorter mers to examine the stream.
 
     // -------------------------------------------------------------------------------------- //
 
@@ -79,7 +79,7 @@ map<int, int> hyperloglog(string fileName, unsigned int randomSeed) {
         
         //cout << "The mer to hash is " << mer << '\n';
         
-        sha1_32a (&mer, sizeof(mer), seed, &hashValue);
+        MurmurHash3_x64_128 (&mer, sizeof(mer), seed, &hashValue);
         //cout << "The hash value is: " << hashValue << '\n';
         //cout << "Therefore, the bits are: " << bitset<32>(hashValue).to_string() << '\n';
 

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <fstream>
 
-float jaccard_function(map<int, int> GenA, map<int, int> GenB){
-    map<int, int> GenAoB;
+float jaccard_function(map<unsigned int, unsigned int> GenA, map<unsigned int, unsigned int> GenB){
+    map<unsigned int, unsigned int> GenAoB;
 
 	float cardA = 0;
 	float cardB = 0;
@@ -15,41 +15,41 @@ float jaccard_function(map<int, int> GenA, map<int, int> GenB){
 	for(auto p: GenB)
 		cardB += p.second;
 
-	map<int, int>::iterator itA = GenA.begin();
-	map<int, int>::iterator itB = GenB.begin();
+	map<unsigned int, unsigned int>::iterator itA = GenA.begin();
+	map<unsigned int, unsigned int>::iterator itB = GenB.begin();
 
 	if(cardA>cardB){
 		while(itA != GenA.end()){
-			map<int, int>::iterator itB = GenB.begin();
+			map<unsigned int, unsigned int>::iterator itB = GenB.begin();
 			while(itB != GenB.end()){
 				if(itA->first == itB->first){
 					if(itA->second > itB->second){
-						GenAoB.insert(pair<int, int>(itA->first, itA->second));
+						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itA->second));
 					} else {
-						GenAoB.insert(pair<int, int>(itA->first, itB->second));
+						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
 					}
 					break;
 				}
 				advance(itB, 1);
 			}
-			GenAoB.insert(pair<int, int>(itA->first, itA->second));
+			GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itA->second));
 			advance(itA, 1);	
 		}
 	}else{
 		while(itB != GenB.end()){
-			map<int, int>::iterator itA = GenA.begin();
+			map<unsigned int, unsigned int>::iterator itA = GenA.begin();
 			while(itA != GenA.end()){
 				if(itA->first == itB->first){
 					if(itA->second > itB->second){
-						GenAoB.insert(pair<int, int>(itA->first, itA->second));
+						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itA->second));
 					} else {
-						GenAoB.insert(pair<int, int>(itA->first, itB->second));
+						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
 					}
 					break;
 				}
 				advance(itA, 1);
 			}
-			GenAoB.insert(pair<int, int>(itA->first, itB->second));
+			GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
 			advance(itB, 1);	
 		}
 	}
