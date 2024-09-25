@@ -6,9 +6,9 @@
 float jaccard_function(map<int, int> GenA, map<int, int> GenB){
     map<int, int> GenAoB;
 
-	int cardA = 0;
-	int cardB = 0;
-	int cardAoB = 0;
+	float cardA = 0;
+	float cardB = 0;
+	float cardAoB = 0;
 	for(auto p: GenA)
 		cardA += p.second;
 
@@ -18,21 +18,39 @@ float jaccard_function(map<int, int> GenA, map<int, int> GenB){
 	map<int, int>::iterator itA = GenA.begin();
 	map<int, int>::iterator itB = GenB.begin();
 
-	if(cardA<cardB){
+	if(cardA>cardB){
 		while(itA != GenA.end()){
-			if(itA->first == itB->first){
-				GenAoB.insert(pair<int, int>(itA->first, itA->second));
+			map<int, int>::iterator itB = GenB.begin();
+			while(itB != GenB.end()){
+				if(itA->first == itB->first){
+					if(itA->second > itB->second){
+						GenAoB.insert(pair<int, int>(itA->first, itA->second));
+					} else {
+						GenAoB.insert(pair<int, int>(itA->first, itB->second));
+					}
+					break;
+				}
+				advance(itB, 1);
 			}
-			advance(itA, 1);
-			advance(itB, 1);
+			GenAoB.insert(pair<int, int>(itA->first, itA->second));
+			advance(itA, 1);	
 		}
 	}else{
 		while(itB != GenB.end()){
-			if(itA->first == itB->first){
-				GenAoB.insert(pair<int, int>(itA->first, itA->second));
+			map<int, int>::iterator itA = GenA.begin();
+			while(itA != GenA.end()){
+				if(itA->first == itB->first){
+					if(itA->second > itB->second){
+						GenAoB.insert(pair<int, int>(itA->first, itA->second));
+					} else {
+						GenAoB.insert(pair<int, int>(itA->first, itB->second));
+					}
+					break;
+				}
+				advance(itA, 1);
 			}
-			advance(itA, 1);
-			advance(itB, 1);
+			GenAoB.insert(pair<int, int>(itA->first, itB->second));
+			advance(itB, 1);	
 		}
 	}
 	for(auto p: GenAoB)
@@ -42,7 +60,7 @@ float jaccard_function(map<int, int> GenA, map<int, int> GenB){
 	cout << "Cardinalidad B: " << cardB << endl;
     cout << "Cardinalidad AoB: " << cardAoB << endl;
 
-    float Jaccard = (cardA + cardB - cardAoB) / cardAoB; 
+    float Jaccard = (float)((cardA + cardB - cardAoB) / cardAoB); 
 
     return Jaccard;
 }

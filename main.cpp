@@ -4,6 +4,7 @@
 #include <fstream>
 #include "hyperloglog.cpp"
 #include "jaccard.cpp"
+#include "realJaccard.cpp"
 
 int main() {
 
@@ -12,7 +13,9 @@ int main() {
 	map<int, int> GenB = hyperloglog("GCF_000959725.1_ASM95972v1_genomic.fna", seed);
 
 	float jaccard = jaccard_function(GenA, GenB);
+	float rejaccard = realJaccard("GCF_000331305.1_ASM33130v1_genomic.fna", "GCF_000959725.1_ASM95972v1_genomic.fna");
 
-	cout << "Jaccard: " << jaccard << endl;
+	cout << "Jaccard: " << fixed << jaccard << endl;
+	cout << "Real Jaccard: " << fixed << rejaccard << endl;
 	return 0;
 }
