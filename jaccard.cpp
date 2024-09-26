@@ -5,6 +5,7 @@
 
 float jaccard_function(map<unsigned int, unsigned int> GenA, map<unsigned int, unsigned int> GenB){
     map<unsigned int, unsigned int> GenAoB;
+	bool breakLoopFlag;
 
 	float cardA = 0;
 	float cardB = 0;
@@ -20,6 +21,7 @@ float jaccard_function(map<unsigned int, unsigned int> GenA, map<unsigned int, u
 
 	if(cardA>cardB){
 		while(itA != GenA.end()){
+			breakLoopFlag = false;
 			map<unsigned int, unsigned int>::iterator itB = GenB.begin();
 			while(itB != GenB.end()){
 				if(itA->first == itB->first){
@@ -28,15 +30,18 @@ float jaccard_function(map<unsigned int, unsigned int> GenA, map<unsigned int, u
 					} else {
 						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
 					}
+					breakLoopFlag = true;
 					break;
 				}
 				advance(itB, 1);
 			}
-			GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itA->second));
+			if(!breakLoopFlag)
+				GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itA->second));
 			advance(itA, 1);	
 		}
 	}else{
 		while(itB != GenB.end()){
+			breakLoopFlag = false;
 			map<unsigned int, unsigned int>::iterator itA = GenA.begin();
 			while(itA != GenA.end()){
 				if(itA->first == itB->first){
@@ -45,11 +50,13 @@ float jaccard_function(map<unsigned int, unsigned int> GenA, map<unsigned int, u
 					} else {
 						GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
 					}
+					breakLoopFlag = true;
 					break;
 				}
 				advance(itA, 1);
 			}
-			GenAoB.insert(pair<unsigned int, unsigned int>(itA->first, itB->second));
+			if(!breakLoopFlag)
+				GenAoB.insert(pair<unsigned int, unsigned int>(itB->first, itB->second));
 			advance(itB, 1);	
 		}
 	}

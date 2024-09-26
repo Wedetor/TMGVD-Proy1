@@ -10,11 +10,13 @@ using namespace std;
 float realJaccard(string fileName1, string fileName2){
 	ifstream firstGenomeFile(fileName1);
     if(!firstGenomeFile.is_open()){
+		cout << "File name error in realJaccard." << "\n";
         return 0;
     }
 
     ifstream secondGenomeFile(fileName2);
     if(!secondGenomeFile.is_open()){
+		cout << "File name error in realJaccard." << "\n";
         return 0;
     }
 
@@ -24,6 +26,8 @@ float realJaccard(string fileName1, string fileName2){
     float secondCardValue = 0;
     map<char, int> unionCard;
     float unionValue;
+
+	bool breakLoopFlag;
 
     string firstLine;
     istream_iterator<char> iit1(firstGenomeFile);
@@ -76,6 +80,7 @@ float realJaccard(string fileName1, string fileName2){
 
     if(firstCardValue>secondCardValue){
 		while(itA != firstCard.end()){
+			breakLoopFlag = false;
 			map<char, int>::iterator itB = secondCard.begin();
 			while(itB != secondCard.end()){
 				if(itA->first == itB->first){
@@ -84,15 +89,18 @@ float realJaccard(string fileName1, string fileName2){
 					} else {
 						unionCard.insert(pair<int, int>(itA->first, itB->second));
 					}
+					breakLoopFlag = true;
 					break;
 				}
 				advance(itB, 1);
 			}
-			unionCard.insert(pair<int, int>(itA->first, itA->second));
+			if(!breakLoopFlag)
+				unionCard.insert(pair<int, int>(itA->first, itA->second));
 			advance(itA, 1);	
 		}
 	}else{
 		while(itB != secondCard.end()){
+			breakLoopFlag = false;
 			map<char, int>::iterator itA = firstCard.begin();
 			while(itA != firstCard.end()){
 				if(itA->first == itB->first){
@@ -101,11 +109,13 @@ float realJaccard(string fileName1, string fileName2){
 					} else {
 						unionCard.insert(pair<int, int>(itA->first, itB->second));
 					}
+					breakLoopFlag = true;
 					break;
 				}
 				advance(itA, 1);
 			}
-			unionCard.insert(pair<int, int>(itA->first, itB->second));
+			if(!breakLoopFlag)
+				unionCard.insert(pair<int, int>(itB->first, itB->second));
 			advance(itB, 1);	
 		}
 	}
