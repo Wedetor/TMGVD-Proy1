@@ -37,6 +37,8 @@ int main() {
 	genSketches.push_back(GenD);
 	genSketches.push_back(GenE);
 
+	vector<float> jaccardVector;
+	vector<float> rejaccardVector;
 	float jaccard;
 	float rejaccard;
 
@@ -47,12 +49,32 @@ int main() {
 			
 			jaccard = jaccard_function(genSketches[i], genSketches[j]);
 			rejaccard = realJaccard(genNames[i], genNames[j]);
+
+			jaccardVector.push_back(jaccard);
+			rejaccardVector.push_back(rejaccard);
 			
 			cout << "Jaccard of GenA & GenB: " << fixed << jaccard << endl;
 			cout << "Real Jaccard: " << fixed << rejaccard << endl;
 			cout << '\n';
 		}
 	}
+
+	float errorRelativoMedio = 0;
+	float errorAbsolutoMedio = 0;
+
+	for(int i = 0; i < jaccardVector.size(); i++){
+		errorRelativoMedio = errorRelativoMedio + ((abs(jaccardVector[i] - rejaccardVector[i]))/rejaccardVector[i]);
+	}
+	errorRelativoMedio = errorRelativoMedio/jaccardVector.size();
+
+	cout << "Error Relativo Medio: " << errorRelativoMedio << endl;
+
+	for(int i = 0; i < jaccardVector.size(); i++){
+		errorAbsolutoMedio = errorAbsolutoMedio + (abs(jaccardVector[i] - rejaccardVector[i]));
+	}
+	errorAbsolutoMedio = errorAbsolutoMedio/jaccardVector.size();
+	
+	cout << "Error Absoluto Medio: " << errorAbsolutoMedio << endl;
 
 	return 0;
 }

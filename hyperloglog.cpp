@@ -33,7 +33,7 @@ map<unsigned int, unsigned int> hyperloglog(string fileName, unsigned int random
     bool firstIteration = true;
 
     string mer;
-    int merSize = 20; // Edit for bigger or shorter mers to examine the stream.
+    int merSize = 25; // Edit for bigger or shorter mers to examine the stream.
 
     // -------------------------------------------------------------------------------------- //
 
